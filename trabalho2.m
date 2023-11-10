@@ -75,3 +75,74 @@ plot(y)
 %%
 hold 
 plot(sinal_de_voz)
+
+%%
+fs = 44100; % Frequência de amostragem em Hz
+duracao_sinal = 5; % Duração do sinal em segundos
+t = 0:1/fs:duracao_sinal-1/fs; % Vetor de tempo
+sinal_de_voz = sin(2*pi*1000*t) + 0.5*sin(2*pi*2000*t); % Exemplo de sinal de áudio (1 kHz + 0.5 kHz)
+% Calcula a Transformada Rápida de Fourier (FFT)
+N = length(sinal_de_voz);
+f = linspace(0, fs, N); % Vetor de frequências
+sinal_de_voz_fft = fft(sinal_de_voz, N);
+
+% Calcula a magnitude da FFT (representação em frequência)
+magnitude_fft = abs(sinal_de_voz_fft) / N;
+
+% Plotagem do espectro de frequência
+figure;
+subplot(2,1,1);
+plot(t, sinal_de_voz);
+title('Sinal de Áudio no Domínio do Tempo');
+xlabel('Tempo (s)');
+ylabel('Amplitude');
+
+subplot(2,1,2);
+plot(f, 20*log10(magnitude_fft));
+title('Espectro de Frequência');
+xlabel('Frequência (Hz)');
+ylabel('Magnitude (dB)');
+grid on;
+%%
+fd=250;
+%wa=(2/ts)*tan(wd*(ts/2)); %pré-distorção de frequência
+fa=(fs/pi)*tan(pi*(fd/fs))
+%pkg load signal
+[sb,sa]= butter(20,2*pi*fa,"high","s")
+%fvtool(sb,sa);                 % Visualize filter
+%numerador b
+freqs(sb,sa,0:3000)
+%%
+%coeficientes do filtro digital
+[zb,za]=bilinear(sb,sa,fs);
+fvtool(zb,za)                   % Visualize the filter
+freqz(zb,za,[],fs)
+%%
+y=filter(zb,za,sinal_de_voz)
+plot(y)
+
+%%
+hold 
+plot(sinal_de_voz)
+
+%%
+fs=44100;
+t=0:(1/fs):10/60;
+x1=sin(2*pi*60*t);
+plot(x1)
+stem(x1)
+x=x1+ sin(2*pi*400*t)
+
+%projeto analogico -> pré-distorção -> transformação bilinear
+fd=2000;
+%wa=(2/ts)*tan(wd*(ts/2)); %pré-distorção de frequência
+fa=(fs/pi)*tan(pi*(fd/fs))
+[sb,sa]= butter(20,2*pi*fa,"high","s")
+freqs(sb,sa,0:1000)
+[zb,za]=bilinear(sb,sa,fs);
+freqz(zb,za,[],fs)
+y=filter(zb,za,x)
+plot(y)
+hold 
+plot(x)
+
