@@ -1,5 +1,5 @@
-[sinal_de_voz, fs] = audioread('audio_trab2.wav'); %Get the loudness of the sound(amplitude)
-N=218112;
+[sinal_de_voz, fs] = audioread('musica.wav'); %Get the loudness of the sound(amplitude)
+N=220500;
 y_BP_FIR = filter(BP_FIR,sinal_de_voz); % apply filter to your data
 y_HP_FIR = filter(hP_FIR,sinal_de_voz); % apply filter to your data
 y_LP_FIR = filter(LP_FIR,sinal_de_voz); % apply filter to your data
@@ -53,6 +53,25 @@ hold on;
 
 % Plotagem do sinal com filtro BP IIR
 plot(t, y_HP_IIR, '-r', 'DisplayName', 'IIR');
+xlabel('Tempo (s)');
+ylabel('Amplitude');
+grid on;
+
+% Adicionando a legenda
+legend('show');
+
+hold off;
+%%
+% Plotagem do sinal com filtro BP FIR
+figure;
+plot(t, y_LP_FIR, '-b', 'DisplayName', 'FIR');
+title('Áudio com Filtro LP FIR e IIR');
+xlabel('Tempo (s)');
+ylabel('Amplitude');
+hold on;
+
+% Plotagem do sinal com filtro BP IIR
+plot(t, y_LP_IIR, '-r', 'DisplayName', 'IIR');
 xlabel('Tempo (s)');
 ylabel('Amplitude');
 grid on;
