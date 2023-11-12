@@ -7,7 +7,8 @@ tf=5;%duração da amostra
 Ts=1/fs;
 N=fs *tf;
 t=(0:N-1)/fs;
-[sinal_de_voz, fs] = audioread('audio_trab2.wav'); %Get the loudness of the sound(amplitude)
+%[sinal_de_voz, fs] = audioread('audio_trab2.wav'); %Get the loudness of the sound(amplitude)
+[sinal_de_voz, fs2] = audioread('audio_trab2.wav'); %Get the loudness of the sound(amplitude)
 n2=length(sinal_de_voz);
 aux=floor(N/2)+1;
 signalfft=fft(sinal_de_voz);
@@ -31,20 +32,25 @@ figure
 filter(Hd,sinal_de_voz)
 %%
 %projeto analogico -> pré-distorção -> transformação bilinear
-fd=250;
+fd=2000;
 %wa=(2/ts)*tan(wd*(ts/2)); %pré-distorção de frequência
 fa=(fs/pi)*tan(pi*(fd/fs))
-[sb,sa]= butter(9,2*pi*fa,"low","s")
+[sb,sa]= butter(7,2*pi*fa,"high","s")
 freqs(sb,sa,0:1000)
+
+ 
 %%
 [zb,za]=bilinear(sb,sa,fs);
 figure
 freqz(zb,za,[],fs)
+h = fvtool(zb,za);                 % Visualize filter
 y=filter(zb,za,sinal_de_voz)
 plot(sinal_de_voz)
 hold on
 plot(y)
 hold off
-figure
+
 soundsc(y, fs);
-plot(fft(y))
+
+
+
